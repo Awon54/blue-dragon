@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using blue_dragon.Data;
+using blue_dragon.Filters;
 using blue_dragon.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +32,17 @@ namespace blue_dragon
         {
             services.AddControllers();
             services.AddSwaggerGen();
+
+            // Inject Fluent Validors
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new ValidationFilter());
+            })
+            .AddFluentValidation(options =>
+            {
+                options.RegisterValidatorsFromAssemblyContaining<Startup>();
+            });
+
 
             // Injecting db context to the framework
             services.AddDbContext<SQLiteDbContext>(options => options.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
@@ -58,7 +71,9 @@ namespace blue_dragon
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "blue-dragon v1");
             });
-            EmployeeDummy.EmployeeDummyTest(context);
+
+            // Create dummy data in the database
+            EmployeeDummy.ActivityDummyData(context);
 
         }
     }

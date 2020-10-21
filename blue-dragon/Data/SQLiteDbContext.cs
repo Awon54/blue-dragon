@@ -1,6 +1,7 @@
 ﻿
 using blue_dragon.Models.V1;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Permissions;
 
 namespace blue_dragon.Data
 {
@@ -19,10 +20,11 @@ namespace blue_dragon.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+   
         }
 
         // register Model here
-        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Activity> Activities { get; set; }
     }
 
 }
