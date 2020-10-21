@@ -73,7 +73,7 @@ namespace blue_dragon
             });
 
             // Create dummy data in the database
-            EmployeeDummy.ActivityDummyData(context);
+            ActivityD.ActivityDummyData(context);
 
         }
     }
