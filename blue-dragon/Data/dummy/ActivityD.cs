@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace blue_dragon.Models
 {
-    public class EmployeeDummy
+    public class ActivityD
     {
 
         public static void ActivityDummyData(SQLiteDbContext db)
