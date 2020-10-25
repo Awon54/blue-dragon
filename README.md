@@ -3,9 +3,9 @@
 You must have the .NET SDK installed. .NET Core 3.1 is recommended.
 
 ## Technologies
-Framework: dotnet core Entity Framework
-Database: sqlite
-UI: Swagger UI
+- Framework: dotnet core Entity Framework
+- Database: sqlite
+- API Visualization: Swagger UI
 
 ## Run
 - Clone the project
