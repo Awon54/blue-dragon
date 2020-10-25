@@ -45,8 +45,9 @@ namespace blue_dragon.Controllers.API.V1
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PutActivity(int id, [FromBody] JsonPatchDocument<Activity> patchDoc)
+        public async Task<IActionResult> PatchActivity(int id, [FromBody] JsonPatchDocument<Activity> patchDoc)
         {
+            System.Console.WriteLine(patchDoc);
             if (patchDoc == null)
             {
                 return BadRequest();
@@ -58,7 +59,7 @@ namespace blue_dragon.Controllers.API.V1
                 return NotFound();
             }
             
-            patchDoc.ApplyTo(activityFromDb, (Microsoft.AspNetCore.JsonPatch.Adapters.IObjectAdapter) ModelState);
+            patchDoc.ApplyTo(activityFromDb, ModelState);
 
             var isValid = TryValidateModel(activityFromDb);
 
