@@ -1,11 +1,10 @@
 ﻿
 using blue_dragon.Models.V1;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Permissions;
 
 namespace blue_dragon.Data
 {
-    public class SQLiteDbContext : DbContext
+    public class BlueDragonDbContext : DbContext
     {
 
         // TODO remove this
@@ -13,14 +12,14 @@ namespace blue_dragon.Data
         //    => options.UseSqlite("Data Source=bluedragon.db");
 
         // for injecting db context
-        public SQLiteDbContext(DbContextOptions<SQLiteDbContext> options) : base(options) { }
+        public BlueDragonDbContext(DbContextOptions<BlueDragonDbContext> options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-   
+
         }
 
         // register Model here

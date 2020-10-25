@@ -1,22 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using blue_dragon.Data;
+using blue_dragon.Data.Repositories;
 using blue_dragon.Filters;
 using blue_dragon.Models;
+using blue_dragon.Service.V1;
+using blue_dragon.Services.V1.Impl;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Linq;
 
 
 namespace blue_dragon
@@ -33,8 +32,12 @@ namespace blue_dragon
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllers();
             services.AddSwaggerGen();
+
+            services.AddAutoMapper(typeof(Startup));
+
 
             // Inject Fluent Validors
             services.AddMvc(options =>
@@ -54,7 +57,14 @@ namespace blue_dragon
 
 
             // Injecting db context to the framework
-            services.AddDbContext<SQLiteDbContext>(options => options.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
+            services.AddDbContext<BlueDragonDbContext>(options => options.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
+
+            // Same object throughout the request
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // New Instance to every new controller and service
+            services.AddTransient<IActivityService, ActivityService>();
+
         }
 
         private static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter()
@@ -74,7 +84,7 @@ namespace blue_dragon
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, SQLiteDbContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, BlueDragonDbContext context)
         {
             if (env.IsDevelopment())
             {

@@ -8,9 +8,9 @@ using blue_dragon.Data;
 
 namespace blue_dragon.Migrations
 {
-    [DbContext(typeof(SQLiteDbContext))]
-    [Migration("20201021073631_initial_create")]
-    partial class initial_create
+    [DbContext(typeof(BlueDragonDbContext))]
+    [Migration("20201025125522_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,8 +24,8 @@ namespace blue_dragon.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("Amount")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");

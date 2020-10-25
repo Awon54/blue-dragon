@@ -7,8 +7,8 @@ using blue_dragon.Data;
 
 namespace blue_dragon.Migrations
 {
-    [DbContext(typeof(SQLiteDbContext))]
-    partial class SQLiteDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(BlueDragonDbContext))]
+    partial class BlueDragonDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,8 +22,8 @@ namespace blue_dragon.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("Amount")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");

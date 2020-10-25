@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using blue_dragon.Dto.V1;
+using blue_dragon.Models.V1;
+using blue_dragon.Service.V1;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using blue_dragon.Data;
-using blue_dragon.Models.V1;
-using Microsoft.AspNetCore.JsonPatch;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace blue_dragon.Controllers.API.V1
 {
@@ -13,143 +14,80 @@ namespace blue_dragon.Controllers.API.V1
     [ApiController]
     public class ActivitiesController : ControllerBase
     {
-        private readonly SQLiteDbContext _context;
 
-        public ActivitiesController(SQLiteDbContext context)
+        private readonly IMapper _mapper;
+        private readonly IActivityService _activityService;
+
+
+
+        public ActivitiesController(IActivityService activityService, IMapper mapper)
         {
-            _context = context;
+            this._mapper = mapper;
+            this._activityService = activityService;
         }
 
         // GET: api/Activities
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Activity>>> GetActivities()
         {
-            return await _context.Activities.OrderByDescending( x=> x.DateTime ).ToListAsync();
+            return Ok(await _activityService.GetAllActivity());
         }
 
         // GET: api/Activities/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> GetActivity(int id)
         {
-            var activity = await _context.Activities.FindAsync(id);
+
+            var activity = await _activityService.GetActivityById(id);
 
             if (activity == null)
             {
                 return NotFound();
             }
 
-            return activity;
+            return Ok(activity);
         }
 
         // Patch status: api/Activities/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchActivity(int id, [FromBody] JsonPatchDocument<Activity> patchDoc)
+        public async Task<IActionResult> PatchActivityStatus(int id, [FromBody] PatchActivityStatusDto patchDoc)
         {
-            System.Console.WriteLine(patchDoc);
             if (patchDoc == null)
             {
                 return BadRequest();
             }
-            var activityFromDb = await _context.Activities.FirstOrDefaultAsync(x => x.Id == id);
 
+            var activityFromDb = await _activityService.GetActivityById(id);
             if (activityFromDb == null)
-            { 
+            {
                 return NotFound();
             }
-            
-            patchDoc.ApplyTo(activityFromDb, ModelState);
-
-            var isValid = TryValidateModel(activityFromDb);
-
-            if (!isValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _activityService.UpdateActivityStatus(activityFromDb, patchDoc.Status);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ActivityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
             return NoContent();
         }
 
-
-        // PUT: api/Activities/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PatchStatus(int id, [FromBody] Activity activity)
-        {
-            if (id != activity.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(activity).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ActivityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         // POST: api/Activities
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Activity>> PostActivity(Activity activity)
+        public async Task<ActionResult<Activity>> PostActivity(ActivityDto activityDto)
+
+
         {
-            _context.Activities.Add(activity);
-            await _context.SaveChangesAsync();
+            Activity activity = _mapper.Map<Activity>(activityDto);
+
+            activity = await _activityService.createActivity(activity);
 
             return CreatedAtAction("GetActivity", new { id = activity.Id }, activity);
         }
 
-        // DELETE: api/Activities/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Activity>> DeleteActivity(int id)
-        {
-            var activity = await _context.Activities.FindAsync(id);
-            if (activity == null)
-            {
-                return NotFound();
-            }
 
-            _context.Activities.Remove(activity);
-            await _context.SaveChangesAsync();
-
-            return activity;
-        }
-
-        private bool ActivityExists(int id)
-        {
-            return _context.Activities.Any(e => e.Id == id);
-        }
     }
 }
