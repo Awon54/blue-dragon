@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace blue_dragon.Migrations
 {
-    public partial class initial_create : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,7 @@ namespace blue_dragon.Migrations
                     DateTime = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Status = table.Column<string>(nullable: true),
-                    Amount = table.Column<long>(nullable: false)
+                    Amount = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
