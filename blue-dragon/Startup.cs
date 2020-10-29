@@ -2,6 +2,7 @@ using AutoMapper;
 using blue_dragon.Data;
 using blue_dragon.Data.Repositories;
 using blue_dragon.Filters;
+using blue_dragon.Helpers;
 using blue_dragon.Models;
 using blue_dragon.Service.V1;
 using blue_dragon.Services.V1.Impl;
@@ -34,7 +35,36 @@ namespace blue_dragon
         {
 
             services.AddControllers();
-            services.AddSwaggerGen();
+            //services.AddSwaggerGen();
+            //services.AddSwaggerGen(c =>
+            //{
+            //    // Your custom configuration
+            //    c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+            //    c.DescribeAllEnumsAsStrings();
+            //    // JWT-token authentication by password
+            //    c.AddSecurityDefinition("oauth2", new OAuth2Scheme
+            //    {
+            //        Type = "oauth2",
+            //        Flow = "password",
+            //        TokenUrl = Path.Combine(HostingEnvironment.WebRootPath, "/token"),
+            //        // Optional scopes
+            //        //Scopes = new Dictionary<string, string>
+            //        //{
+            //        //    { "api-name", "my api" },
+            //        //}
+            //    });
+            //});
+
+            services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("oauth2", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                    Scheme = "basic"
+                });
+            }
+            );
+
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -106,6 +136,9 @@ namespace blue_dragon
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "blue-dragon v1");
             });
+
+            // Add custom jwt middleware
+            app.UseMiddleware<JwtMiddleware>();
 
             // Create dummy data in the database
             ActivityD.ActivityDummyData(context);

@@ -8,7 +8,7 @@ namespace blue_dragon.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<ActivityDto, Activity>();
+            CreateMap<ActivityRequest, Activity>();
         }
     }
 }

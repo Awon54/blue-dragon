@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace blue_dragon.Validator.V1
 {
-    public class PatchActivityStatusDtoValidor : AbstractValidator<PatchActivityStatusDto>
+    public class PatchActivityStatusDtoValidor : AbstractValidator<PatchActivityStatusRequest>
     {
 
         public PatchActivityStatusDtoValidor()

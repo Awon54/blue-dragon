@@ -2,7 +2,7 @@
 
 namespace blue_dragon.Dto.V1
 {
-    public class ActivityDto
+    public class ActivityRequest
     {
         public string Description { get; set; }
         public string Status { get; set; }
