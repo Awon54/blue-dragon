@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace blue_dragon.Controllers.API.V1
 {
-    [Route("api/[controller]")]
+    [Route("v1/api/[controller]")]
     [ApiController]
     public class ActivitiesController : ControllerBase
     {
@@ -50,7 +50,7 @@ namespace blue_dragon.Controllers.API.V1
 
         // Patch status: api/Activities/5
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchActivityStatus(int id, [FromBody] PatchActivityStatusDto patchDoc)
+        public async Task<IActionResult> PatchActivityStatus(int id, [FromBody] PatchActivityStatusRequest patchDoc)
         {
             if (patchDoc == null)
             {
@@ -77,7 +77,7 @@ namespace blue_dragon.Controllers.API.V1
 
         // POST: api/Activities
         [HttpPost]
-        public async Task<ActionResult<Activity>> PostActivity(ActivityDto activityDto)
+        public async Task<ActionResult<Activity>> PostActivity(ActivityRequest activityDto)
 
 
         {
