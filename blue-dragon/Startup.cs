@@ -2,8 +2,10 @@ using AutoMapper;
 using blue_dragon.Data;
 using blue_dragon.Data.Repositories;
 using blue_dragon.Filters;
+using blue_dragon.Helpers;
 using blue_dragon.Models;
 using blue_dragon.Service.V1;
+using blue_dragon.Services.V1;
 using blue_dragon.Services.V1.Impl;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -62,6 +64,8 @@ namespace blue_dragon
             // Same object throughout the request
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddScoped<IUserService, UserService>();
+
             // New Instance to every new controller and service
             services.AddTransient<IActivityService, ActivityService>();
 
@@ -106,6 +110,8 @@ namespace blue_dragon
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "blue-dragon v1");
             });
+
+            app.UseMiddleware<JwtMiddleware>();
 
             // Create dummy data in the database
             ActivityD.ActivityDummyData(context);
