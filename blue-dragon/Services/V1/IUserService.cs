@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace blue_dragon.Services.V1
 {
-    interface IUserService
+    public interface IUserService
     {
         AuthenticateResponse Authenticate(AuthenticateRequest model);
         IEnumerable<User> GetAll();

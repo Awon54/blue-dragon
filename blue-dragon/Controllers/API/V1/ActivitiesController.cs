@@ -83,7 +83,7 @@ namespace blue_dragon.Controllers.API.V1
         {
             Activity activity = _mapper.Map<Activity>(activityDto);
 
-            activity = await _activityService.createActivity(activity);
+            activity = await _activityService.CreateActivity(activity);
 
             return CreatedAtAction("GetActivity", new { id = activity.Id }, activity);
         }

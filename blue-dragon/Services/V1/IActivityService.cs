@@ -9,7 +9,7 @@ namespace blue_dragon.Service.V1
     {
         Task<IEnumerable<Activity>> GetAllActivity();
         Task<Activity> GetActivityById(int id);
-        Task<Activity> createActivity(Activity activity);
+        Task<Activity> CreateActivity(Activity activity);
         Task UpdateActivityStatus(Activity activityToBeUpdated, String status);
         Task DeleteActivity(Activity activity);
 

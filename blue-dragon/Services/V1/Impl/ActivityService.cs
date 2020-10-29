@@ -35,7 +35,7 @@ namespace blue_dragon.Services.V1.Impl
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<Activity> createActivity(Activity activity)
+        public async Task<Activity> CreateActivity(Activity activity)
         {
             activity.DateTime = DateTime.UtcNow;
             await _unitOfWork.Activities.AddAsync(activity);
