@@ -2,6 +2,7 @@
 using blue_dragon.Dto.V1;
 using blue_dragon.Models.V1;
 using blue_dragon.Service.V1;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace blue_dragon.Controllers.API.V1
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ActivitiesController : ControllerBase

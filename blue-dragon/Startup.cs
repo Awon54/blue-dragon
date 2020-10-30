@@ -2,10 +2,12 @@ using AutoMapper;
 using blue_dragon.Data;
 using blue_dragon.Data.Repositories;
 using blue_dragon.Filters;
+using blue_dragon.Helpers;
 using blue_dragon.Models;
 using blue_dragon.Service.V1;
 using blue_dragon.Services.V1.Impl;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +36,11 @@ namespace blue_dragon
         {
 
             services.AddControllers();
+
+            // configure basic authentication 
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
             services.AddSwaggerGen();
 
             services.AddAutoMapper(typeof(Startup));
@@ -58,6 +65,8 @@ namespace blue_dragon
 
             // Injecting db context to the framework
             services.AddDbContext<BlueDragonDbContext>(options => options.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
+
+            services.AddScoped<IUserService, UserService>();
 
             // Same object throughout the request
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -95,6 +104,12 @@ namespace blue_dragon
 
             app.UseRouting();
 
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
