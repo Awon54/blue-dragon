@@ -2,10 +2,12 @@ using AutoMapper;
 using blue_dragon.Data;
 using blue_dragon.Data.Repositories;
 using blue_dragon.Filters;
+using blue_dragon.Helpers;
 using blue_dragon.Models;
 using blue_dragon.Service.V1;
 using blue_dragon.Services.V1.Impl;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System.Linq;
-
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 
 namespace blue_dragon
 {
@@ -34,7 +37,41 @@ namespace blue_dragon
         {
 
             services.AddControllers();
-            services.AddSwaggerGen();
+
+            // configure basic authentication 
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
+            services.AddSwaggerGen( options =>
+            {
+                options.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+                {
+                    Description = "Basic",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "basic"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "http"
+                            },
+                            Scheme = "basic",
+                            Name = "basic",
+                            In =ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
+
+            });
 
             services.AddAutoMapper(typeof(Startup));
 
@@ -58,6 +95,8 @@ namespace blue_dragon
 
             // Injecting db context to the framework
             services.AddDbContext<BlueDragonDbContext>(options => options.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
+
+            services.AddScoped<IUserService, UserService>();
 
             // Same object throughout the request
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -95,6 +134,12 @@ namespace blue_dragon
 
             app.UseRouting();
 
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

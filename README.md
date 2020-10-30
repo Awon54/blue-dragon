@@ -6,7 +6,11 @@ You must have the .NET SDK installed. .NET Core 3.1 is recommended.
 - Framework: dotnet core Entity Framework
 - Database: sqlite
 - API Visualization: Swagger UI
-
+- Basic Authentication
+	- Static credential
+		username: test
+		password: test
+  
 ## Run
 - Clone the project
 - Install dotnet cli or Visual Studio
@@ -15,8 +19,10 @@ You must have the .NET SDK installed. .NET Core 3.1 is recommended.
 
 - Import blue-dragon.sln
 - Use IIS Express to start the app
-### Test
+### To check existing APIs
 - automatically opens swagger UI in the browser.
+
+
 
 ### [Dotnet Cli](https://docs.microsoft.com/en-us/dotnet/core/tools/)
 
@@ -29,3 +35,5 @@ You must have the .NET SDK installed. .NET Core 3.1 is recommended.
 
 - `dotnet ef migrations add InitialCreate`
 - `dotnet ef database update`
+
+
