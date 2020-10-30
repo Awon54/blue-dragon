@@ -5,14 +5,14 @@ Example project in .net core
 - Framework: dotnet core Entity Framework
 - Database: sqlite
 - API Visualization: Swagger UI
-- xUnit and Moq for unit tests	
+- Test cases: xUnit and Moq for unit tests
 
-# Authentication
+## Authentication
 - Basic Authentication
 	- Static credential
 		username: `test`,
-		password: `test`	
-  
+		password: `test`
+
 ## Run Application
 - Clone the project
 - Install dotnet cli or Visual Studio
@@ -24,15 +24,14 @@ Example project in .net core
 ### To check existing APIs
 - automatically opens swagger UI in the browser.
 
-# [Dotnet cli] Run Tests
-- from blue-dragon/test run `dotnet test`
-
 ### [Dotnet Cli](https://docs.microsoft.com/en-us/dotnet/core/tools/)
-
 - from blue-dragon/blue-dragon run `dotnet run`
 
-#### CheckApi's:
+## CheckApi's:
 - open [localhost:5001/swagger](localhost:5001/swagger) on your browser.
+
+## Run Tests using Dotnet cli
+- from blue-dragon/test run `dotnet test`
 
 ## Setting up DB (Optional)
 *Note: Already setup, Use only if necessary*
