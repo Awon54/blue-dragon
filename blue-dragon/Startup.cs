@@ -18,7 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System.Linq;
-
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 
 namespace blue_dragon
 {
@@ -41,7 +42,36 @@ namespace blue_dragon
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen( options =>
+            {
+                options.AddSecurityDefinition("basic", new OpenApiSecurityScheme
+                {
+                    Description = "Basic",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "basic"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "http"
+                            },
+                            Scheme = "basic",
+                            Name = "basic",
+                            In =ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
+
+            });
 
             services.AddAutoMapper(typeof(Startup));
 
